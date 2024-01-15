@@ -18,10 +18,14 @@ func (h *Hosts) FindHosts(name string) (nips []net.IP) {
 	return
 }
 
-func MoveHosts(name string) {
-
+func (h *Hosts)DelHost(name string) {
+	delete(h.Map,name)
 }
 
-func AddHosts() {
 
+func (h *Hosts) AddHosts(name string,ips []string ) {
+	if h.Map == nil {
+		h.Map = make(map[string][]string)
+	}
+	h.Map[name] = ips
 }

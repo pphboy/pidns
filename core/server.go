@@ -5,7 +5,6 @@ import (
 	"math/rand"
 	"net"
 	"os"
-	"strconv"
 	"sync"
 	"time"
 
@@ -18,40 +17,27 @@ type DnsServer struct {
 	// 绑定的地址和端口
 	BindAddress string `toml:"bindAddress"`
 
-	rejectType []uint16
+	RejectType []uint16
 
 	Hosts Hosts
 
 	ctx context.Context
 }
 
-func (ds *DnsServer) NewServer() {
-
-	ds.BindAddress = ":53"
-	ds.rejectType = []uint16{255}
-	ds.Hosts.Map = map[string][]string{
-		"pi.g": []string{
-			"192.168.224.88",
-		},
-		"node1.pi.g": []string{
-			"192.168.224.88",
-		},
-	}
-	go func() {
-		i := 0
-
-		for {
-			select {
-			case <-time.After(10 * time.Second):
-				i++
-				node := "node" + strconv.Itoa(i) + ".pi.g"
-				ds.Hosts.Map[node] = []string{"192.168.224.88"}
-				logrus.Printf("%v", ds.Hosts.Map)
-			}
-		}
-	}()
+func NewServer(serv *DnsServer) (*DnsServer) {
+	var ds DnsServer
+	
+	ds.BindAddress = serv.BindAddress
+	ds.RejectType =  serv.RejectType
+	
 	ds.ctx = context.Background()
+
+	logrus.Infof("Server Running: %s",ds.BindAddress)
+	logrus.Infof("RejectType: %+v",ds.RejectType)
+
+	return &ds
 }
+
 
 func (ds *DnsServer) Run() {
 
@@ -173,7 +159,7 @@ func (ds *DnsServer) Exchange(q *dns.Msg) *dns.Msg {
 // 检查是否存在 拒绝访问的类型
 func (ds *DnsServer) validateRejectType(q *dns.Msg) bool {
 
-	for _, qt := range ds.rejectType {
+	for _, qt := range ds.RejectType {
 		if q.Question[0].Qtype == qt {
 			return false
 		}
