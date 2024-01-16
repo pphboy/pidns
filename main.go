@@ -25,11 +25,13 @@ func main() {
 		"192.168.224.88",
 	})
 
-	manageServer := &server.HostServer{}
-	
-	manageServer.NewMngServ(":50051", "tcp", ds)
+	var ms server.ManageServer
 
-	manageServer.RunServ()
+	ms = &server.HostServer{}
+	
+	ms.NewMngServ(":50051", "tcp", ds)
+
+	ms.RunServ()
 	
 	ds.Run()
 
