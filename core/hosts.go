@@ -29,3 +29,12 @@ func (h *Hosts) AddHosts(name string,ips []string ) {
 	}
 	h.Map[name] = ips
 }
+
+
+//  get ip of string array
+func (h *Hosts) GetHosts(name string) []string {
+
+	ipv4s, _ := h.Map[name]
+	
+	return ipv4s
+}
