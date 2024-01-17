@@ -35,6 +35,7 @@ type HostServer struct {
 func (h *HostServer) NewMngServ(lisn string, network string,ds *core.DnsServer) {
 	h.lisndAddr = lisn
 	h.network = network
+	h.dnsServer = ds
 }
 
 func (h *HostServer) RunServ() {

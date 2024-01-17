@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+
+import "google/protobuf/any.proto";
+
+
+option go_package = "pidns/cli";
+
+package server;
+
+service HostManager {
+        rpc AddHosts(Host) returns (Result);
+        rpc DelHosts(Host) returns (Result);
+        rpc GetHosts(Host) returns (Result);
+}
+
+message Host {
+        string domain = 1;
+        repeated string ips = 2;
+}
+
+message Result {
+        string msg = 1;
+        uint32 code = 2;
+        google.protobuf.Any data = 3;        
+}
