@@ -13,7 +13,7 @@ func main() {
 	var g sync.WaitGroup
 
 	g.Add(2)
-	
+
 	logrus.Println("PiDns Start")
 
 	ds := core.NewServer(&core.DnsServer{
@@ -23,7 +23,6 @@ func main() {
 		},
 	})
 
-
 	ds.Hosts.AddHosts("pi.g", []string{
 		"192.168.224.88",
 	})
@@ -32,22 +31,20 @@ func main() {
 		"192.168.224.88",
 	})
 
-	go func(){
+	go func() {
 		ds.Run()
 	}()
 
-	go func(){
+	go func() {
 		var ms server.ManageServer
 
 		ms = &server.HostServer{}
-		
+
 		ms.NewMngServ(":50051", "tcp", ds)
 
 		ms.RunServ()
 	}()
 
-
 	g.Wait()
-	
 
 }
